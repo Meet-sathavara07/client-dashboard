@@ -324,33 +324,33 @@ function Dashboard() {
       </div>
 
       {/*  post */}
-      <div className="p-6 max-w-screen-xl mx-auto">
-          <h2 className="text-3xl font-bold mb-6">Posts</h2>
-          <div className="overflow-x-auto mb-8">
-            <table className="w-full table-auto bg-white shadow-md rounded-lg border-2 border-black">
-              <thead>
-                <tr className="bg-gray-200 border-b border-black">
-                  <th className="p-2 border-l border-r border-black text-center">No</th>
-                  <th className="p-3 border-l border-r border-black text-center">Client Names</th>
-                  <th className="p-3 border-l border-r border-black text-center">Subject</th>
-                  <th className="p-3 border-l border-r border-black text-center">Description</th>
-                  <th className="p-3 border-l border-r border-black text-center">Sent Date</th>
+      <div className="p-6 min-h-screen max-w-screen-xl mx-auto">
+        <h2 className="text-3xl font-bold mb-6">Posts</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full table-auto bg-white shadow-md rounded-lg border-2 border-black">
+            <thead>
+              <tr className="bg-gray-200 border-b border-black">
+                <th className="p-2 border-l border-r border-black text-center">No</th>
+                <th className="p-3 border-l border-r border-black text-center">Client Names</th>
+                <th className="p-3 border-l border-r border-black text-center">Subject</th>
+                <th className="p-3 border-l border-r border-black text-center">Description</th>
+                <th className="p-3 border-l border-r border-black text-center">Sent Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {posts.map((post, index) => (
+                <tr key={post._id} className="border-b border-black">
+                  <td className="p-2 border-l border-r border-black text-center">{index + 1}</td>
+                  <td className="p-3 max-w-72 border-l border-r border-black">{post.clientNames.join(', ')}</td>
+                  <td className="p-3 min-w-28 border-l border-r border-black">{post.subject}</td>
+                  <td className="p-3 max-w-sm border-l border-r border-black">{post.description}</td>
+                  <td className="p-3 border-l border-r border-black">{new Date(post.sentDate).toLocaleString()}</td>
                 </tr>
-              </thead>
-              <tbody>
-                {posts.map((post, index) => (
-                  <tr key={post._id} className="border-b border-black">
-                    <td className="p-2 border-l border-r border-black text-center">{index + 1}</td>
-                    <td className="p-3 max-w-72 border-l border-r border-black">{post.clientNames.join(', ')}</td>
-                    <td className="p-3 min-w-28 border-l border-r border-black">{post.subject}</td>
-                    <td className="p-3 max-w-sm border-l border-r border-black">{post.description}</td>
-                    <td className="p-3 border-l border-r border-black">{new Date(post.sentDate).toLocaleString()}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
         </div>
+      </div>
         
     </div>
   );
