@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'; // Import navigate
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -10,6 +10,8 @@ function Posts() {
   const [selectedClients, setSelectedClients] = useState([]);
   const [showPostForm, setShowPostForm] = useState(false);
   const [showClientTable, setShowClientTable] = useState(false);
+  const navigate = useNavigate(); // Use navigate here
+
 
   useEffect(() => {
     const fetchClients = async () => {
@@ -41,6 +43,8 @@ function Posts() {
     fetchClients();
     fetchPosts();
   }, []);
+
+
 
   const handlePostFormSubmit = async (e) => {
     e.preventDefault();
@@ -74,7 +78,7 @@ function Posts() {
       setPostContent('');
       setSelectedClients([]);
       setShowClientTable(false);
-      Navigate('/');
+      navigate('/');
       setError(null);
     } catch (error) {
       setError(error.message);
