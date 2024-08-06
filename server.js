@@ -3,7 +3,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const Client = require('./src/models/dataSchema');
 const Post = require('./src/models/postSchema');
-const { generateUniqueId } = require('./src/models/generateUniqueId'); // Adjust path as needed
+const { generateUniqueId } = require('./src/models/generateUniqueId');
+const CaPost = require('./src/models/caPostSchema');
 
 
 const app = express();
@@ -84,23 +85,18 @@ app.post('/posts', async (req, res) => {
 });
 
 
-// Add this new route in your server.js
 app.get('/posts-with-client-names', async (req, res) => {
   try {
-    // Fetch all posts
     const posts = await Post.find({}).lean();
     
-    // Collect unique client IDs from posts
     const clientIds = [...new Set(posts.flatMap(post => post.clientIds))];
     
-    // Fetch client details based on clientIds
     const clients = await Client.find({ _id: { $in: clientIds } }).lean();
     const clientMap = clients.reduce((map, client) => {
       map[client._id] = client.name;
       return map;
     }, {});
 
-    // Map client names to posts
     const postsWithNames = posts.map(post => ({
       ...post,
       clientNames: post.clientIds.map(id => clientMap[id] || 'Unknown'),
@@ -111,6 +107,52 @@ app.get('/posts-with-client-names', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
+app.get('/client-with-posts', async (req, res) => {
+  try {
+    const caposts = await CaPost.find({}).lean();
+    const clientIds = [...new Set(caposts.flatMap(post => post.clientIds))];
+    const clients = await Client.find({ _id: { $in: clientIds } }).lean();
+    const clientMap = clients.reduce((map, client) => {
+      map[client._id] = client.name;
+      return map;
+    }, {});
+    const capostsWithNames = caposts.map(post => ({
+      ...post,
+      clientNames: post.clientIds.map(id => clientMap[id] || 'Unknown'),
+    }));
+    res.json(capostsWithNames);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Example: POST endpoint for adding new posts
+app.post('/ca-posts', async (req, res) => {
+  try {
+    const { clientIds, subject, description } = req.body;
+    const newPost = new CaPost({
+      clientIds,
+      subject,
+      description,
+      sentDate: new Date(),
+    });
+    await newPost.save();
+    res.status(201).json(newPost);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+});
+
+// Example: GET endpoint for fetching all posts
+app.get('/ca-posts', async (req, res) => {
+  try {
+    const posts = await CaPost.find().populate('clientIds', 'name').exec();
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 
 
 app.listen(port, () => {
