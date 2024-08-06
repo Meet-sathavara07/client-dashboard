@@ -1,3 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.border-l {
+    border-left: 1px solid #ccc;
+  }
+  
+  .border-gray-300 {
+    border-color: #ccc;
+  }
+  
