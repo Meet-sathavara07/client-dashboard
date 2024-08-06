@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Navigate } from 'react-router-dom';
 
 function Posts() {
   const [posts, setPosts] = useState([]);
@@ -73,6 +74,7 @@ function Posts() {
       setPostContent('');
       setSelectedClients([]);
       setShowClientTable(false);
+      Navigate('/');
       setError(null);
     } catch (error) {
       setError(error.message);
