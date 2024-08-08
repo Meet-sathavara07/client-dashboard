@@ -10,7 +10,6 @@ function Dashboard() {
   const [error, setError] = useState(null);
   const [name, setName] = useState('');
   const [pan, setPan] = useState('');
-  const [email, setEmail] = useState('');
   const [showPostForm, setShowPostForm] = useState(false);
   const [showAddClientForm, setShowAddClientForm] = useState(false);
   const [showClientTable, setShowClientTable] = useState(false);
@@ -93,10 +92,9 @@ function Dashboard() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addClient({ name, pan, email });
+    addClient({ name, pan });
     setName('');
     setPan('');
-    setEmail('');
   };
 
   const handleSelectAll = (e) => {
@@ -250,15 +248,7 @@ function Dashboard() {
               onChange={(e) => setPan(e.target.value)}
               className="p-2 border rounded-lg"
             />
-            <label htmlFor="email" className="font-medium text-gray-700">Email</label>
-            <input
-              id="email"
-              type="email"
-              placeholder="Enter client email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="p-2 border rounded-lg"
-            />
+            
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-lg shadow-md mt-4"

@@ -1,10 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const Client = require('./src/models/dataSchema');
+const Client = require('./src/models/clientSchema');
 const Post = require('./src/models/postSchema');
-const { generateUniqueId } = require('./src/models/generateUniqueId');
 const CaPost = require('./src/models/caPostSchema');
+
 
 
 const app = express();
@@ -22,19 +22,19 @@ mongoose.connect('mongodb://localhost:27017/client-management', {
     console.error('MongoDB connection error:', err);
     process.exit(1);
   });
+// POST /clients route
+app.post('/clients', async (req, res) => {
+  try {
+    const newClient = new Client(req.body);
+    const savedClient = await newClient.save();
+    res.status(201).json(savedClient);
+  } catch (err) {
+    console.error('Error saving client:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
 
-  app.post('/clients', async (req, res) => {
-    try {
-      const uniqueId = await generateUniqueId();
-      const newClient = new Client({ ...req.body, _id: uniqueId });
-      const savedClient = await newClient.save();
-      res.status(201).json(savedClient);
-    } catch (err) {
-      console.error('Error saving client:', err);
-      res.status(500).json({ error: 'Internal server error' });
-    }
-  });
-  
+// GET /clients route
 app.get('/clients', async (req, res) => {
   try {
     const clients = await Client.find();
@@ -45,6 +45,7 @@ app.get('/clients', async (req, res) => {
   }
 });
 
+// DELETE /clients/:id route
 app.delete('/clients/:id', async (req, res) => {
   try {
     const { id } = req.params;
@@ -54,13 +55,15 @@ app.delete('/clients/:id', async (req, res) => {
       return res.status(404).json({ error: 'Client not found' });
     }
 
+    // Add the deleted ID to the DeletedId collection
+    await DeletedId.create({ _id: id });
+
     res.json({ message: 'Client deleted' });
   } catch (err) {
     console.error('Error deleting client:', err);
     res.status(500).json({ error: 'Internal server error' });
   }
 });
-
 
 app.post('/posts', async (req, res) => {
   try {
